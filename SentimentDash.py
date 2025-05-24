@@ -5,10 +5,9 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# --- Streamlit page config ---
 st.set_page_config(page_title="Sentiment Dashboard", layout="wide")
 
-# --- Custom CSS for footer badge ---
+
 st.markdown("""
     <style>
         .footer {
@@ -30,17 +29,17 @@ st.markdown("""
     <div class="footer">Developed by Supriya</div>
 """, unsafe_allow_html=True)
 
-# --- Sidebar Inputs with Search Button ---
+
 st.sidebar.title("🔍 Sentiment Analyzer")
 with st.sidebar.form(key="search_form"):
     topic = st.text_input("Enter a topic:", "AI")
     limit = st.slider("Number of posts to analyze", min_value=10, max_value=100, step=10, value=20)
     submit_button = st.form_submit_button(label="🔎 Search")
 
-# --- Reddit & Sentiment Setup ---
+
 reddit = praw.Reddit(
-    client_id='0xIcPRPZtI44Gq3-pYoF9g',
-    client_secret='YD6svfC3v7qCUd2cXM7gxzSjHutQkg',
+    client_id='myid',
+    client_secret='mysecret',
     user_agent='sentimentDash by /u/supriyadev3824'
 )
 
@@ -68,7 +67,7 @@ def analyze_keyword_sentiments(posts):
     df["Sentiment"] = sentiments
     return df
 
-# --- Main App ---
+
 st.title("📊What's the Mood?")
 
 if submit_button and topic:
@@ -79,14 +78,14 @@ if submit_button and topic:
         else:
             df = analyze_keyword_sentiments(posts)
 
-            # --- Summary Metrics ---
+        
             st.subheader("🔢 Sentiment Summary")
             col1, col2, col3 = st.columns(3)
             col1.metric("😄 Positive", df["Sentiment"].value_counts().get("Positive", 0))
             col2.metric("😐 Neutral", df["Sentiment"].value_counts().get("Neutral", 0))
             col3.metric("😡 Negative", df["Sentiment"].value_counts().get("Negative", 0))
 
-            # --- Post List & Chart ---
+            
             col1, col2 = st.columns([2, 1])
             with col1:
                 st.subheader(f"📝 Top {limit} posts for '{topic}':")
